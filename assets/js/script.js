@@ -4,45 +4,25 @@ const cityInputEl = document.querySelector('#city-input');
 const cityContainerEl = document.querySelector('#city-container');
 const apiKey = 'edeb4ca36bc2cc213a04647b525557a5';
 
-function getCities() {
-    return JSON.parse(localStorage.getItem('cities')) || [];
+let cityArray = [];
+
+function storeCity() {
+    localStorage.setItem('cities', JSON.stringify(cityArray));
 }
 
-const formSubmitHandler = function (event) {
-    event.preventDefault();
-
-    const city = cityInputEl.value.trim();
-
-    if (city) {
-        getCityWeather(city);
-        showHistory(city);
-        //storeCity(city);
-        cityContainerEl.textContent = '';
-        cityInputEl.value = '';
-    } else {
-        alert('Please enter a City name');
+const showHistory = function () {
+    cityButtonsEl.textContent = '';
+    for (const city of cityArray) {
+        const btnHistory = document.createElement('button');
+        btnHistory.classList.add('btn', 'btn-primary', 'mb-3');
+        btnHistory.textContent = city;
+        btnHistory.setAttribute('data-city', city);
+        cityButtonsEl.appendChild(btnHistory);
     }
-};
 
-const buttonClickHandler = function (event) {
-    const cityWeater = event.target.getAttribute('data-city');
-
-    if (cityWeater) {
-        getCityWeather(cityWeater);
-        cityContainerEl.textContent = '';
-    }
-};
-
-const showHistory = function (cityInput) {
-    const btnHistory = document.createElement('button');
-    btnHistory.classList.add('btn', 'btn-primary', 'mb-3');
-    btnHistory.textContent = cityInput;
-    btnHistory.setAttribute('data-city', cityInput);
-    cityButtonsEl.appendChild(btnHistory);
 };
 
 const getCityWeather = function (city) {
-    // https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
 
     fetch(apiUrl)
@@ -93,11 +73,42 @@ const displayCities = function (cityData) {
     cityContainerEl.append(cityEl);
 };
 
-function storeCity(cityIn) {
-    const listCity = getCities();
-    listCity.push(cityIn);
-    localStorage.setItem('cities', JSON.stringify(listCity));
-}
+
+const formSubmitHandler = function (event) {
+    event.preventDefault();
+
+    const city = cityInputEl.value.trim();
+
+    if (city) {
+        getCityWeather(city);
+        cityArray.push(city);
+        storeCity();
+        showHistory();
+        ;
+        cityContainerEl.textContent = '';
+        cityInputEl.value = '';
+    } else {
+        alert('Please enter a City name');
+    }
+};
+
+const buttonClickHandler = function (event) {
+    const cityWeater = event.target.getAttribute('data-city');
+
+    if (cityWeater) {
+        getCityWeather(cityWeater);
+        cityContainerEl.textContent = '';
+    }
+};
 
 cityFormEl.addEventListener('submit', formSubmitHandler);
 cityButtonsEl.addEventListener('click', buttonClickHandler);
+
+window.onload = () => {
+    const listCities = JSON.parse(localStorage.getItem('cities'));
+    if (listCities !== null) {
+        cityArray = listCities;
+        console.log(cityArray);
+    }
+    showHistory();
+};
