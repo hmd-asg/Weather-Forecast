@@ -17,8 +17,8 @@
     </header>
 
     <main class="container-fluid justify-space-between">
-        <div class="row">
-            <div class="col-12 col-md-4">
+        <aside class="row">
+            <div class="col-12 col-md-4 col-lg-3">
                 <div class="card mb-4">
                     <h3 class="card-header text-uppercase">Search By City</h3>
                     <form id="city-form" class="card-body">
@@ -30,16 +30,15 @@
                         <button type="submit" class="btn btn-primary">Get Weather</button>
                     </form>
                 </div>
-
-                <div class="list-group" id="city-buttons">
-                </div>
+                <div class="list-group" id="city-buttons"></div>
             </div>
 
-            <div class="col-12 col-md-8 px-4">
-                <h2 class="subtitle">Weather for:</h2>
-                <div id="city-container" class="list-group"></div>
+            <div class="col-12 col-md-8 col-lg-9 px-4">
+                <h2 class="subtitle">Weather for : <strong id="weatherDate"></strong></h2>
+                <div id="city-container" class="list-group text-center"></div>
+                <div id="five-days" class="row"></div>
             </div>
-        </div>
+        </aside>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <script src="./assets/js/script.js"></script>
